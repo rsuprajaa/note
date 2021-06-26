@@ -1,0 +1,17 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "supraja",
+  "password": "supraja",
+  "database": "notes",
+  "synchronize": true,
+  "logging": true,
+  "entities": ["build/entity/*.js"],
+  "migrations": ["build/migration/*.js"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
+  }
+}
