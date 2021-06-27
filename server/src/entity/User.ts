@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt'
 import { Exclude } from 'class-transformer'
 import { IsEmail, Length } from 'class-validator'
-import { BeforeInsert, Column, Entity } from 'typeorm'
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm'
 import Model from './Entity'
+import Folder from './Folder'
 
 @Entity('users')
 export default class User extends Model {
@@ -18,6 +19,9 @@ export default class User extends Model {
   @Exclude()
   @Length(6, 255)
   password: string
+
+  @OneToMany(() => Folder, folder => folder.user)
+  folders: Folder[]
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
