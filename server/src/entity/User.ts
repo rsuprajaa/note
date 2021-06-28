@@ -4,6 +4,7 @@ import { IsEmail, Length } from 'class-validator'
 import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm'
 import Model from './Entity'
 import Folder from './Folder'
+import UserRole from './UserRole'
 
 @Entity('users')
 export default class User extends Model {
@@ -22,6 +23,9 @@ export default class User extends Model {
 
   @OneToMany(() => Folder, folder => folder.user)
   folders: Folder[]
+
+  @OneToMany(() => UserRole, userRole => userRole.user)
+  userRole: UserRole[]
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
