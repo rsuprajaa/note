@@ -1,4 +1,5 @@
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 import 'reflect-metadata'
@@ -10,6 +11,13 @@ import noteRoutes from './routes/note'
 dotenv.config()
 
 const app = express()
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.ORIGIN,
+    optionsSuccessStatus: 200,
+  })
+)
 app.use(express.json())
 app.use(cookieParser())
 app.use('/api/auth', authRoutes)
