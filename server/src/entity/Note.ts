@@ -1,6 +1,7 @@
 import { Length } from 'class-validator'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import Model from './Entity'
+import Favorite from './Favorite'
 import Folder from './Folder'
 import UserRole from './UserRole'
 
@@ -24,6 +25,9 @@ export default class Note extends Model {
 
   @OneToMany(() => UserRole, userRole => userRole.resource)
   userRole: UserRole[]
+
+  @OneToMany(() => Favorite, favorites => favorites.note)
+  favorites: Favorite[]
 
   constructor(note: Partial<Note>) {
     super()

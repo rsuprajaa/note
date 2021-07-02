@@ -5,6 +5,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import authRoutes from './routes/auth'
+import favoriteRoutes from './routes/favorite'
 import folderRoutes from './routes/folder'
 import noteRoutes from './routes/note'
 
@@ -23,6 +24,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/folder', folderRoutes)
 app.use('/api/notes', noteRoutes)
+app.use('/api/favorites', favoriteRoutes)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req: Request, res: Response, _next: NextFunction) => {
