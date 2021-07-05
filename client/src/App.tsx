@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import './App.css'
+import Sidebar from './components/Sidebar'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
@@ -16,6 +18,10 @@ function App() {
         </Route>
         <Route exact path="/register">
           <Register />
+        </Route>
+        <Route exact path="/workspace">
+          <Sidebar />
+          <Home />
         </Route>
       </Switch>
     </BrowserRouter>
