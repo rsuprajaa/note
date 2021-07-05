@@ -3,6 +3,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import Model from './Entity'
 import Favorite from './Favorite'
 import Folder from './Folder'
+import NoteTag from './Note_Tag'
+import Tag from './Tag'
 import UserRole from './UserRole'
 
 @Entity('notes')
@@ -28,6 +30,9 @@ export default class Note extends Model {
 
   @OneToMany(() => Favorite, favorites => favorites.note)
   favorites: Favorite[]
+
+  @OneToMany(() => NoteTag, noteTags => noteTags.tag)
+  tag: Tag[]
 
   constructor(note: Partial<Note>) {
     super()

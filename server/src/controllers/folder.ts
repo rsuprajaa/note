@@ -89,17 +89,17 @@ export const deleteFolder = async (req: Request, res: Response, next: NextFuncti
 export const getAllNotesOfFolder = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const folderId = req.params.id
+    const { user } = res.locals
     const folder = await Folder.findOne({ id: folderId })
     if (!folder) {
       res.status(404)
       throw new Error('Folder not found')
     }
-    const notes = await Note.find({
-      folder,
-      order: {
-        updatedAt: 'DESC',
-      },
-    })
+    if (folder.user.id !== user.id) {
+      res.status(401)
+      throw new Error('Unauthorized access')
+    }
+    const notes = await Note.find({ folder })
     return res.status(200).json(notes)
   } catch (err) {
     next(err)

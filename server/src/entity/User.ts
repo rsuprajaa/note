@@ -5,6 +5,7 @@ import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm'
 import Model from './Entity'
 import Favorite from './Favorite'
 import Folder from './Folder'
+import Tag from './Tag'
 import UserRole from './UserRole'
 
 @Entity('users')
@@ -30,6 +31,9 @@ export default class User extends Model {
 
   @OneToMany(() => Favorite, favorites => favorites.user)
   favorites: Favorite[]
+
+  @OneToMany(() => Tag, tag => tag.user)
+  tags: Tag[]
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {

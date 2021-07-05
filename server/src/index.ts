@@ -8,6 +8,7 @@ import authRoutes from './routes/auth'
 import favoriteRoutes from './routes/favorite'
 import folderRoutes from './routes/folder'
 import noteRoutes from './routes/note'
+import tagRoutes from './routes/tag'
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/folder', folderRoutes)
 app.use('/api/notes', noteRoutes)
 app.use('/api/favorites', favoriteRoutes)
+app.use('/api/tags', tagRoutes)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req: Request, res: Response, _next: NextFunction) => {
