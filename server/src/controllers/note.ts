@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
+import { Like } from 'typeorm'
 import Folder from '../entity/Folder'
 import Note from '../entity/Note'
 import User from '../entity/User'
@@ -160,6 +161,17 @@ export const sharedWithUser = async (req: Request, res: Response, next: NextFunc
     const { user } = res.locals
     const notesShared = await UserRole.find({ user, permission: 'member' })
     return res.status(200).json(notesShared)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const searchNotes = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    const { user } = res.locals
+    const { query } = req.body
+    const notes = await Note.find({ where: { body: Like(query), user } })
+    return res.status(200).json(notes)
   } catch (err) {
     next(err)
   }
