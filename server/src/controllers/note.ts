@@ -145,11 +145,21 @@ export const removePermission = async (req: Request, res: Response, next: NextFu
     }
     const hasAccess = await UserRole.findOne({ user: userToBeRemoved, resource: note, permission: 'member' })
     if (!hasAccess) {
-      res.status(404)
+      res.status(401)
       throw new Error(`User doesn't have access`)
     }
     await UserRole.delete({ user: userToBeRemoved, resource: note, permission: 'member' })
     return res.status(200).json('User removed')
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const sharedWithUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    const { user } = res.locals
+    const notesShared = await UserRole.find({ user, permission: 'member' })
+    return res.status(200).json(notesShared)
   } catch (err) {
     next(err)
   }

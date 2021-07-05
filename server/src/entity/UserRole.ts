@@ -14,7 +14,7 @@ export default class UserRole extends Model {
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne(() => Note, { nullable: false })
+  @ManyToOne(() => Note, { nullable: false, eager: true })
   @JoinColumn({ name: 'resource_id' })
   resource: Note
 

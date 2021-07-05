@@ -36,8 +36,14 @@ export const removeFromFavorites = async (req: Request, res: Response, next: Nex
     const { user } = res.locals
     const favorite = await Favorite.findOne({ id })
 
-    if (!favorite) return res.status(400).json('Favorite not found')
-    if (favorite.user.id !== user.id) return res.status(400).json('Unauthorized access')
+    if (!favorite) {
+      res.status(404)
+      throw new Error('Not found')
+    }
+    if (favorite.user.id !== user.id) {
+      res.status(401)
+      throw new Error('Unauthorized access')
+    }
     await Favorite.delete({ id })
     return res.status(200).json('Deleted from favorites')
   } catch (err) {
