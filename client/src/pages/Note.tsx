@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getNote, updateNote } from '../apiCalls/notes'
 import Layout from '../components/Layout/Layout'
+import Editor from '../components/TextEditor/CKEditor'
 import NoteToolbar from '../components/Toolbar/Note'
 import { Note } from '../types'
 
@@ -14,14 +15,20 @@ const NotePage = () => {
   const [name, setName] = useState<string | void>('')
   const [savedName, setSavedName] = useState<string | void>('')
   const [savedBody, setSavedBody] = useState<string | void>('')
-  const [body, setBody] = useState<string | void>('')
+  const [body, setBody] = useState<string>('')
+
   useEffect(() => {
     getNote(id).then(res => {
       setNote(res)
-      setBody(res?.body)
-      setName(res?.title)
     })
   }, [id])
+
+  useEffect(() => {
+    if (note) {
+      setBody(note.body)
+      setName(note.title)
+    }
+  }, [note])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,6 +41,7 @@ const NotePage = () => {
     return () => clearTimeout(timer)
   }, [name, body])
 
+  const content = '# hello'
   return (
     <Layout>
       {note && (
@@ -59,14 +67,7 @@ const NotePage = () => {
               className="block w-full text-4xl font-bold outline-none text-primary-default"
               onChange={e => setName(e.target.value)}
             />
-            <textarea
-              contentEditable="true"
-              suppressContentEditableWarning={true}
-              className="block w-full my-4 text-lg tracking-wide break-words outline-none resize-y"
-              placeholder="Click here to start writing"
-              onChange={e => setBody(e.target.value || 'helo')}
-              value={body || ''}
-            ></textarea>
+            <Editor body={body} setBody={setBody} />
           </div>
         </>
       )}

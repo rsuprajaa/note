@@ -50,3 +50,61 @@
 .font-15 {
   font-size: 15px;
 }
+
+.editor p,
+ul,
+li {
+  font-size: 18px;
+}
+
+.ck-editor {
+  background-color: white !important;
+}
+.ck-toolbar {
+  border: none !important;
+  background-color: transparent !important;
+  justify-content: space-around !important;
+}
+.ck-toolbar__items {
+  display: flex !important;
+  justify-content: space-between;
+  width: 90%;
+}
+.ck-editor__editable {
+  border: none !important;
+  max-height: 75vh;
+}
+.ck-editor__editable:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.ck-media__wrapper {
+  width: 50%;
+}
+
+.editor ol {
+  list-style-type: decimal !important;
+  list-style-position: inside;
+}
+
+.editor ul {
+  list-style-type: disc !important;
+  list-style-position: inside;
+}
+
+.note-page h2 {
+  font-size: 1.5rem;
+  line-height: normal;
+}
+
+.note-page h3 {
+  font-size: 1.2rem;
+  line-height: normal;
+}
+
+.note-page h4 {
+  font-size: 1rem;
+  line-height: normal;
+}

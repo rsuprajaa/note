@@ -10,3 +10,15 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+@layer base {
+  h2 {
+    @apply text-5xl font-bold leading-normal;
+  }
+  h3 {
+    @apply text-3xl font-bold leading-normal;
+  }
+  h4 {
+    @apply text-lg font-bold leading-normal;
+  }
+}

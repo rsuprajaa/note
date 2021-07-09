@@ -112,11 +112,11 @@ const NoteToolbar = (props: AppProps) => {
           Share
         </span>
         {shareMenu && (
-          <ul className="absolute flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
+          <ul className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
             <div>
               <input
                 type="text"
-                className="px-1 mr-2 border-2 border-gray-300 rounded-md focus:outline-none"
+                className="w-9/12 px-1 mr-2 text-base border-2 border-gray-300 rounded-md focus:outline-none"
                 value={email || ''}
                 placeholder="Add email"
                 onChange={e => setEmail(e.target.value)}
@@ -126,7 +126,7 @@ const NoteToolbar = (props: AppProps) => {
               </button>
             </div>
             <div>
-              <p className="mt-2 font-medium">Members</p>
+              <p className="mt-2 text-base font-medium">Members</p>
               <ul>
                 {note.userRole.map(role => (
                   <MemberCard setNote={setNote} key={role.id} role={role} />

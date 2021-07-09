@@ -59,26 +59,28 @@ const FolderPage = () => {
           folder={folder}
         />
       )}
-      <div className="max-w-6xl mx-auto mt-12">
-        <input
-          type="text"
-          className="block w-full mb-2 text-4xl font-bold outline-none text-primary-default"
-          value={folderName || ''}
-          onChange={e => setFolderName(e.target.value)}
-          maxLength={32}
-        />
-        <div className="my-1">
-          <button onClick={addNoteHandler} className="py-1 px-1.5 my-2 rounded hover:bg-basic-50 text-primary-light ">
-            <i className="mr-2 fas fa-plus"></i>
-            Add Note
-          </button>
+      {folder && (
+        <div className="max-w-6xl mx-auto mt-12">
+          <input
+            type="text"
+            className="block w-full mb-2 text-4xl font-bold outline-none text-primary-default"
+            value={folderName || ''}
+            onChange={e => setFolderName(e.target.value)}
+            maxLength={32}
+          />
+          <div className="my-1">
+            <button onClick={addNoteHandler} className="py-1 px-1.5 my-2 rounded hover:bg-basic-50 text-primary-light ">
+              <i className="mr-2 fas fa-plus"></i>
+              Add Note
+            </button>
+          </div>
+          <div className="grid grid-cols-4 mx-1 gap-x-8 gap-y-2">
+            {notes?.map(note => (
+              <NoteCard key={note.id} note={note} />
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-4 mx-1 gap-x-8 gap-y-2">
-          {notes?.map(note => (
-            <NoteCard key={note.id} note={note} />
-          ))}
-        </div>
-      </div>
+      )}
     </Layout>
   )
 }
