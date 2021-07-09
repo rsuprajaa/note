@@ -4,7 +4,6 @@ import Model from './Entity'
 import Favorite from './Favorite'
 import Folder from './Folder'
 import NoteTag from './Note_Tag'
-import Tag from './Tag'
 import UserRole from './UserRole'
 
 @Entity('notes')
@@ -13,7 +12,7 @@ export default class Note extends Model {
   @Length(1, 255)
   title: string
 
-  @Column({ nullable: true })
+  @Column({ default: '' })
   @Length(1, 255)
   body: string
 
@@ -21,7 +20,7 @@ export default class Note extends Model {
   @Length(1, 255)
   priority: string
 
-  @ManyToOne(() => Folder, folder => folder.notes, { nullable: false })
+  @ManyToOne(() => Folder, folder => folder.notes, { nullable: false, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'folder_id' })
   folder: Folder
 
@@ -31,8 +30,8 @@ export default class Note extends Model {
   @OneToMany(() => Favorite, favorites => favorites.note)
   favorites: Favorite[]
 
-  @OneToMany(() => NoteTag, noteTags => noteTags.tag)
-  tag: Tag[]
+  @OneToMany(() => NoteTag, noteTags => noteTags.note)
+  noteTag: NoteTag[]
 
   constructor(note: Partial<Note>) {
     super()

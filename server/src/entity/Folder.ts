@@ -10,7 +10,7 @@ export default class Folder extends Model {
   @Length(1, 255)
   name: string
 
-  @ManyToOne(() => User, user => user.folders, { eager: true, nullable: false })
+  @ManyToOne(() => User, user => user.folders, { eager: true, nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User
 

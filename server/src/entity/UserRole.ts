@@ -10,11 +10,11 @@ export default class UserRole extends Model {
   @Length(1, 255)
   permission: string
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE', eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne(() => Note, { nullable: false, eager: true })
+  @ManyToOne(() => Note, { nullable: false, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'resource_id' })
   resource: Note
 

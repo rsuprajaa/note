@@ -7,7 +7,7 @@ import User from './User'
 
 @Entity('tags')
 export default class Tag extends Model {
-  @Column({ unique: true })
+  @Column()
   @Length(1, 64)
   name: string
 
@@ -15,7 +15,7 @@ export default class Tag extends Model {
   note: Note[]
 
   // created by
-  @ManyToOne(() => User, user => user.tags, { nullable: false })
+  @ManyToOne(() => User, user => user.tags, { nullable: false, onDelete: 'CASCADE' })
   user: User
 
   constructor(tag: Partial<Tag>) {

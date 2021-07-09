@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
-import { Like } from 'typeorm'
 import Folder from '../entity/Folder'
 import Note from '../entity/Note'
 import User from '../entity/User'
@@ -33,7 +32,7 @@ export const getNote = async (req: Request, res: Response, next: NextFunction): 
   try {
     const { user } = res.locals
     const noteId = req.params.id
-    const note = await Note.findOne({ id: noteId })
+    const note = await Note.findOne({ id: noteId }, { relations: ['userRole', 'noteTag', 'favorites'] })
     if (!note) {
       res.status(404)
       throw new Error('Note not found')
@@ -98,15 +97,14 @@ export const deleteNote = async (req: Request, res: Response, next: NextFunction
 
 export const addPermission = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const userId = req.params.id
-    const { noteId } = req.body
+    const { noteId, email } = req.body
     const { user } = res.locals
     const note = await Note.findOne({ id: noteId })
     if (!note) {
       res.status(404)
       throw new Error('Note not found')
     }
-    const userToBeAdded = await User.findOne({ id: userId })
+    const userToBeAdded = await User.findOne({ email })
     if (!userToBeAdded) {
       res.status(404)
       throw new Error('User not found')
@@ -115,6 +113,11 @@ export const addPermission = async (req: Request, res: Response, next: NextFunct
     if (!isOwner) {
       res.status(401)
       throw new Error('Unauthorized')
+    }
+    const hasAccess = await UserRole.findOne({ user: userToBeAdded, resource: note, permission: 'member' })
+    if (hasAccess) {
+      res.status(401)
+      throw new Error(`User already has access`)
     }
     const role = new UserRole({ user: userToBeAdded, permission: 'member', resource: note })
     await role.save()
@@ -126,8 +129,7 @@ export const addPermission = async (req: Request, res: Response, next: NextFunct
 
 export const removePermission = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const userId = req.params.id
-    const { noteId } = req.body
+    const { noteId, userId } = req.body
     const { user } = res.locals
     const note = await Note.findOne({ id: noteId })
     if (!note) {
@@ -161,17 +163,6 @@ export const sharedWithUser = async (req: Request, res: Response, next: NextFunc
     const { user } = res.locals
     const notesShared = await UserRole.find({ user, permission: 'member' })
     return res.status(200).json(notesShared)
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const searchNotes = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-  try {
-    const { user } = res.locals
-    const { query } = req.body
-    const notes = await Note.find({ where: { body: Like(query), user } })
-    return res.status(200).json(notes)
   } catch (err) {
     next(err)
   }

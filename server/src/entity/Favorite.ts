@@ -5,11 +5,11 @@ import User from './User'
 
 @Entity('favorites')
 export default class Favorite extends Model {
-  @ManyToOne(() => User, { nullable: false, eager: true })
+  @ManyToOne(() => User, { nullable: false, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne(() => Note, { nullable: false })
+  @ManyToOne(() => Note, { nullable: false, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'note_id' })
   note: Note
 

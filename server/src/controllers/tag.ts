@@ -21,7 +21,7 @@ export const createTag = async (req: Request, res: Response, next: NextFunction)
   try {
     const { name } = req.body
     const { user } = res.locals
-    const tagExists = await Tag.findOne({ name })
+    const tagExists = await Tag.findOne({ name, user })
     if (tagExists) {
       res.status(400)
       throw new Error('Duplicate tags not allowed')
