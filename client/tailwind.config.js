@@ -5,15 +5,18 @@ module.exports = {
     extend: {
       colors: {
         basic: {
-          400: '#2d2f34',
           300: '#3f434a',
           250: '#5e666e',
-          200: '#6a707c',
+          200: 'rgba(25, 23, 17, 0.6)',
           150: '#acb1b9',
-          100: '#ecedef',
-          50: '#f1f2f4',
+          100: 'rgb(247, 246, 243)',
+          50: 'rgba(55,53,47,0.08)',
         },
-        primary: {},
+        primary: {
+          light: 'rgba(25, 23, 17, 0.6)',
+          dark: '#2d2f34',
+          default: 'rgba(55,53,47)',
+        },
       },
     },
     theme: {},

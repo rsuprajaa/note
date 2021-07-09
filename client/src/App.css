@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+.shadow-custom {
+  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px;
+}
+
+[contenteditable='true']:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block;
+}
+
+.font-15 {
+  font-size: 15px;
+}
