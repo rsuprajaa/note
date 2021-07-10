@@ -8,9 +8,13 @@ const Favorites = () => {
   const [favorites, setFavorites] = useState<Favorite[] | void>()
 
   useEffect(() => {
-    getFavorites().then(res => {
-      setFavorites(res)
-    })
+    getFavorites()
+      .then(res => {
+        setFavorites(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }, [])
 
   return (

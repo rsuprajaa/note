@@ -1,29 +1,51 @@
-import axios from 'axios'
 import { FormEvent, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { register } from '../apiCalls/auth'
+import Alert from '../components/Alert/Alert'
+import Loader from '../components/Loader/Loader'
+import { validEmail, validInput, validPassword } from '../utils/validation'
 
 const Register = () => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<any>('')
-  const loginHandler = async (e: FormEvent) => {
+  const [error, setError] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const history = useHistory()
+
+  const registerHandler = async (e: FormEvent) => {
     e.preventDefault()
-    const res = await axios.post(
-      '/auth/register',
-      { email, password, name },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    console.log(res)
+    if (!validEmail(email)) {
+      setError('Enter a valid email address')
+      return
+    }
+    if (!validInput(name)) {
+      setError('Please enter your name')
+      return
+    }
+    if (!validPassword(password)) {
+      setError('Password should have 6 or more characters')
+      return
+    }
+    setLoading(true)
+    register(name, email, password)
+      .then(res => {
+        history.push('/workspace')
+      })
+      .catch(err => {
+        setError(err.response.data.message)
+      })
+    setLoading(false)
   }
+
   return (
     <div className="w-screen min-h-screen mx-auto">
       <div className="w-2/6 px-8 py-12 m-auto mt-28">
         <h1 className="px-4 mb-4 text-4xl font-bold text-center">Register</h1>
-        <form onSubmit={loginHandler}>
+        {loading && <Loader center={true} />}
+        {error && <Alert message={error} variant="error" />}
+        <form onSubmit={registerHandler}>
           <label>Email</label>
           <input
             className="block w-full px-3 py-1 border-2 border-primary-light"

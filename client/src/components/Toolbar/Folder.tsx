@@ -1,41 +1,71 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { deleteFolder, updateFolder } from '../../apiCalls/folder'
 import { Folder } from '../../types'
+import { validInput } from '../../utils/validation'
+import Modal from '../Alert/Modal'
+import Loader from '../Loader/Loader'
 
-interface AppProps {
+interface FolderProps {
   folder: Folder
   savedName: string | void
-  setSavedName: React.Dispatch<React.SetStateAction<string | void>>
+  setSavedName: React.Dispatch<React.SetStateAction<string>>
   folderName: string | void
-  setFolderName: React.Dispatch<React.SetStateAction<string | void>>
+  setFolderName: React.Dispatch<React.SetStateAction<string>>
+  saveLoader: boolean
+  setSaveLoader: Dispatch<SetStateAction<boolean>>
 }
 
-const FolderToolbar = (props: AppProps) => {
+const FolderToolbar = (props: FolderProps) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const { folder, savedName, setSavedName, folderName, setFolderName } = props
+  const { folder, savedName, setSavedName, folderName, setFolderName, setSaveLoader, saveLoader } = props
+  const [deleteModal, setDeleteModal] = useState<boolean>(false)
+  const [deleteAction, setDeleteAction] = useState<boolean>(false)
+
   const history = useHistory()
 
   const saveFolderHandler = () => {
-    if (savedName !== folderName && folderName && folderName.trim().length > 2) {
-      updateFolder(folder.id, folderName).then(res => {})
-      setSavedName()
+    if (savedName !== folderName && folderName && validInput(folderName)) {
+      console.log(saveLoader)
+      setSaveLoader(true)
+      updateFolder(folder.id, folderName).then(res => {
+        // setSaveLoader(false)
+        setSavedName(folderName)
+      })
     }
   }
 
   const deleteFolderHandler = () => {
-    deleteFolder(folder.id).then(res => {
-      history.push('/workspace')
-    })
+    setDeleteModal(true)
   }
 
+  useEffect(() => {
+    if (deleteAction) {
+      deleteFolder(folder.id).then(res => {
+        history.push('/workspace')
+      })
+    }
+  }, [deleteAction, history])
+
   return (
-    <nav className="px-4 py-3 text-primary-light">
+    <div className="px-4 py-3 select-none text-primary-light">
+      {deleteModal && (
+        <Modal
+          title="Are you sure you want to delete the folder?"
+          actionValue={deleteAction}
+          setActionValue={setDeleteAction}
+          action="Delete"
+          variant="error"
+          body="Are you sure you want to delete your folder. This
+          action cannot be undone."
+          setModal={setDeleteModal}
+        />
+      )}
       <div className="float-left">
         <span className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50">{folder.name}</span>
       </div>
       <div className="float-right">
-        <span className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={() => saveFolderHandler}>
+        <span className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={saveFolderHandler}>
           Save
         </span>
         <span
@@ -51,8 +81,13 @@ const FolderToolbar = (props: AppProps) => {
             </li>
           </ul>
         )}
+        {saveLoader && (
+          <div className="absolute w-20 right-4">
+            <Loader message="Saving" />
+          </div>
+        )}
       </div>
-    </nav>
+    </div>
   )
 }
 

@@ -5,6 +5,7 @@ import Layout from '../components/Layout/Layout'
 import Editor from '../components/TextEditor/CKEditor'
 import NoteToolbar from '../components/Toolbar/Note'
 import { Note } from '../types'
+import { validInput } from '../utils/validation'
 
 const AUTOSAVE_INTERVAL = 1000
 
@@ -12,10 +13,11 @@ const NotePage = () => {
   const location = useLocation()
   const id = location.pathname.split('/')[2]
   const [note, setNote] = useState<Note | void>()
-  const [name, setName] = useState<string | void>('')
-  const [savedName, setSavedName] = useState<string | void>('')
-  const [savedBody, setSavedBody] = useState<string | void>('')
+  const [name, setName] = useState<string>('')
+  const [savedName, setSavedName] = useState<string>('')
+  const [savedBody, setSavedBody] = useState<string>('')
   const [body, setBody] = useState<string>('')
+  const [saveLoader, setSaveLoader] = useState<boolean>(false)
 
   useEffect(() => {
     getNote(id).then(res => {
@@ -32,10 +34,13 @@ const NotePage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (savedName !== name || savedBody !== body) {
-        updateNote(id, body, name).then(res => {})
-        setSavedBody(body)
-        setSavedName(name)
+      if ((savedName !== name && validInput(name)) || savedBody !== body) {
+        setSaveLoader(true)
+        updateNote(id, body, name).then(res => {
+          setSaveLoader(false)
+          setSavedBody(body)
+          setSavedName(name)
+        })
       }
     }, AUTOSAVE_INTERVAL)
     return () => clearTimeout(timer)
@@ -53,6 +58,8 @@ const NotePage = () => {
           savedName={savedName}
           setSavedBody={setSavedBody}
           setSavedName={setSavedName}
+          saveLoader={saveLoader}
+          setSaveLoader={setSaveLoader}
           note={note}
           folder={note.folder}
         />

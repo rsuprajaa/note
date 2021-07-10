@@ -1,60 +1,81 @@
-import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { checkFavorite, toggleFavorite } from '../../apiCalls/favorites'
 import { addPermission, deleteNote, getNote, updateNote } from '../../apiCalls/notes'
-import { createTag, getAllTags } from '../../apiCalls/tags'
-import { Folder, Note, Tag } from '../../types'
+import { Folder, Note } from '../../types'
+import { validEmail, validInput } from '../../utils/validation'
+import Alert from '../Alert/Alert'
+import Modal from '../Alert/Modal'
+import Loader from '../Loader/Loader'
 import MemberCard from '../Note/MemberCard'
 
 interface AppProps {
   note: Note
   folder: Folder
-  body: string | void
-  title: string | void
-  savedBody: string | void
-  savedName: string | void
-  setSavedBody: Dispatch<SetStateAction<string | void>>
-  setSavedName: Dispatch<SetStateAction<string | void>>
+  body: string
+  title: string
+  savedBody: string
+  savedName: string
+  setSavedBody: Dispatch<SetStateAction<string>>
+  setSavedName: Dispatch<SetStateAction<string>>
   setNote: Dispatch<SetStateAction<void | Note | undefined>>
+  saveLoader: boolean
+  setSaveLoader: Dispatch<SetStateAction<boolean>>
 }
 
 const NoteToolbar = (props: AppProps) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [favorite, setFavorite] = useState<boolean>(false)
-  const [tagsMenu, setTagsMenu] = useState<boolean>(false)
   const [shareMenu, setShareMenu] = useState<boolean>(false)
-  const [email, setEmail] = useState<string | void>('')
-  const [tagName, setTagName] = useState<string | void>('')
-  const [tags, setTags] = useState<Tag[] | void>()
+  const [email, setEmail] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [shareLoading, setShareLoading] = useState<boolean>(false)
+  const [deleteAction, setDeleteAction] = useState<boolean>(false)
+  const [deleteModal, setDeleteModal] = useState<boolean>(false)
 
   const history = useHistory()
-  const { savedBody, savedName, folder, body, setSavedName, title, setSavedBody, note, setNote } = props
+  const {
+    savedBody,
+    savedName,
+    folder,
+    body,
+    setSavedName,
+    title,
+    setSavedBody,
+    note,
+    setNote,
+    saveLoader,
+    setSaveLoader,
+  } = props
 
   const saveNoteHandler = () => {
-    if (savedName !== title || savedBody !== body) {
-      updateNote(note.id, body, title).then(res => {})
+    if ((savedName !== title && validInput(title)) || savedBody !== body) {
+      setSaveLoader(true)
+      updateNote(note.id, body, title).then(res => {
+        setSaveLoader(false)
+      })
       setSavedBody(body)
       setSavedName(title)
     }
   }
 
   const deleteNoteHandler = () => {
-    deleteNote(note.id).then(res => {
-      history.push(`/folder/${folder.id}`)
-    })
+    setDeleteModal(true)
   }
+
+  useEffect(() => {
+    if (deleteAction) {
+      deleteNote(note.id).then(res => {
+        history.push('/workspace')
+      })
+    }
+  }, [deleteAction])
 
   useEffect(() => {
     checkFavorite(note.id).then(res => {
       setFavorite(res || false)
     })
-  }, [])
-
-  useEffect(() => {
-    getAllTags().then(res => {
-      setTags(res)
-    })
-  }, [])
+  }, [note.id])
 
   const favoriteHandler = () => {
     console.log(favorite)
@@ -69,30 +90,40 @@ const NoteToolbar = (props: AppProps) => {
     }
   }
 
-  const createTagHandler = () => {
-    if (tagName) {
-      createTag(tagName).then(res => {
-        getAllTags().then(res => {
-          setTags(res)
-        })
-        setTagName('')
-      })
+  const shareHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!validEmail(email)) {
+      setError('Enter a valid email address')
+      return
     }
-  }
-
-  const addTag = (e: MouseEventHandler<HTMLButtonElement>) => {}
-
-  const shareHandler = () => {
-    addPermission(note.id, email || '').then(res => {
-      setEmail('')
-      getNote(note.id).then(res => {
-        setNote(res)
+    setShareLoading(true)
+    addPermission(note.id, email || '')
+      .then(res => {
+        setEmail('')
+        getNote(note.id).then(res => {
+          setNote(res)
+        })
       })
-    })
+      .catch(err => {
+        setError(err.response.data.message)
+      })
+    setShareLoading(false)
   }
 
   return (
-    <nav className="px-4 py-3 text-primary-light">
+    <div className="px-4 py-3 select-none text-primary-light">
+      {deleteModal && (
+        <Modal
+          title="Are you sure you want to delete the note?"
+          actionValue={deleteAction}
+          setActionValue={setDeleteAction}
+          action="Delete"
+          variant="error"
+          body="Are you sure you want to delete your note. This
+          action cannot be undone."
+          setModal={setDeleteModal}
+        />
+      )}
       <div className="float-left">
         <span
           className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50"
@@ -113,18 +144,23 @@ const NoteToolbar = (props: AppProps) => {
         </span>
         {shareMenu && (
           <ul className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
-            <div>
+            <form onSubmit={shareHandler} className="mb-2">
               <input
                 type="text"
                 className="w-9/12 px-1 mr-2 text-base border-2 border-gray-300 rounded-md focus:outline-none"
                 value={email || ''}
                 placeholder="Add email"
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value)
+                  setError('')
+                }}
               />
-              <button onClick={shareHandler}>
+              <button type="submit">
                 <i className="fas fa-plus"></i>
               </button>
-            </div>
+            </form>
+            {error && <Alert message={error} variant="error" size="sm" />}
+            {shareLoading && <Loader message="Adding" />}
             <div>
               <p className="mt-2 text-base font-medium">Members</p>
               <ul>
@@ -162,8 +198,13 @@ const NoteToolbar = (props: AppProps) => {
             </li>
           </ul>
         )}
+        {saveLoader && (
+          <div className="absolute w-20 right-4">
+            <Loader message="Saving" />
+          </div>
+        )}
       </div>
-    </nav>
+    </div>
   )
 }
 
