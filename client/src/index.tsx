@@ -2,12 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import App from './App'
+import { UserContextProvider } from './context/UserContext'
 import './index.css'
 import reportWebVitals from './reportWebVitals.js'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

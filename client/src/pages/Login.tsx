@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { login } from '../apiCalls/auth'
 import Alert from '../components/Alert/Alert'
 import Loader from '../components/Loader/Loader'
+import { useAuth } from '../context/UserContext'
 import { validEmail, validInput } from '../utils/validation'
 
 const Login = () => {
@@ -10,8 +11,10 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const history = useHistory()
 
+  const { dispatch } = useAuth()
+
+  const history = useHistory()
   const loginHandler = async (e: FormEvent) => {
     e.preventDefault()
     if (!validEmail(email)) {
@@ -25,6 +28,8 @@ const Login = () => {
     setLoading(true)
     login(email, password)
       .then(res => {
+        dispatch({ type: 'LOGIN', payload: res.data })
+        localStorage.setItem('authenticated', JSON.stringify(true))
         history.push('/workspace')
       })
       .catch(err => {

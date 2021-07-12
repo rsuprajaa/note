@@ -26,10 +26,9 @@ const FolderToolbar = (props: FolderProps) => {
 
   const saveFolderHandler = () => {
     if (savedName !== folderName && folderName && validInput(folderName)) {
-      console.log(saveLoader)
       setSaveLoader(true)
       updateFolder(folder.id, folderName).then(res => {
-        // setSaveLoader(false)
+        setSaveLoader(false)
         setSavedName(folderName)
       })
     }

@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { getFavorites } from '../apiCalls/favorites'
 import Layout from '../components/Layout/Layout'
+import Loader from '../components/Loader/Loader'
 import NoteCard from '../components/Note/NoteCard'
 import { Favorite } from '../types'
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState<Favorite[] | void>()
+  const [favoritesLoading, setFavoritesLoading] = useState<boolean>(true)
 
   useEffect(() => {
     getFavorites()
       .then(res => {
         setFavorites(res)
+        setFavoritesLoading(false)
       })
       .catch(err => {
         console.log(err)
@@ -19,12 +22,20 @@ const Favorites = () => {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto mt-12">
-        <h1 className="text-5xl font-bold">Favorites</h1>
-        <div className="grid grid-cols-4 mx-1 mt-4 gap-x-8 gap-y-2">
-          {favorites?.map(favorite => favorite && <NoteCard key={favorite.id} note={favorite.note} />)}
+      {favoritesLoading ? (
+        <Loader center={true} />
+      ) : (
+        <div className="max-w-6xl mx-auto mt-12">
+          <h1 className="text-5xl font-bold">Favorites</h1>
+          <div className="grid grid-cols-4 mx-1 mt-4 gap-x-8 gap-y-2">
+            {favorites && favorites.length > 0 ? (
+              favorites.map(favorite => favorite && <NoteCard key={favorite.id} note={favorite.note} />)
+            ) : (
+              <p className="absolute mt-48 text-lg left-2/4 text-primary-default">No Notes found</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   )
 }

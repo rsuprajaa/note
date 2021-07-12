@@ -11,7 +11,6 @@ const MemberCard = (props: AppProps) => {
   const { role, setNote } = props
   const deleteMember = () => {
     removePermission(role.resource.id, role.user.id).then(res => {
-      console.log(res)
       getNote(role.resource.id).then(res => {
         setNote(res)
       })

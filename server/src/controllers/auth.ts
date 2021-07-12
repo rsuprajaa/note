@@ -18,7 +18,18 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     const errors = await validate(user)
     if (errors.length > 0) return res.status(400).json({ errors })
     await user.save()
-    return res.status(200).json(user)
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+    res.set(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 2147483647,
+        path: '/',
+      })
+    )
+    return res.status(200).send(user)
   } catch (err) {
     next(err)
   }
@@ -39,7 +50,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 3600,
+        maxAge: 2147483647,
         path: '/',
       })
     )

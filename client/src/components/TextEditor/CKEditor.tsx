@@ -2,16 +2,16 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import React, { Dispatch, SetStateAction } from 'react'
 
-interface AppProps {
+interface EditorProps {
   body: string
   setBody: Dispatch<SetStateAction<string>>
 }
 
-const Editor = (props: AppProps) => {
+const Editor = (props: EditorProps) => {
   const { body, setBody } = props
-  console.log(body)
   return (
     <div className="mx-auto mt-4 leading-normal text-primary-default editor">
+      <p>{body}</p>
       <CKEditor
         config={{
           toolbar: [

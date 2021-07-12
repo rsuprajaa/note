@@ -63,7 +63,7 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
       res.status(401)
       throw new Error('Unauthorized')
     }
-    note.body = body || note.body
+    note.body = body || ''
     note.title = title || note.title
     note.priority = priority || note.priority
     await note.save()

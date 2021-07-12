@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { register } from '../apiCalls/auth'
 import Alert from '../components/Alert/Alert'
 import Loader from '../components/Loader/Loader'
+import { useAuth } from '../context/UserContext'
 import { validEmail, validInput, validPassword } from '../utils/validation'
 
 const Register = () => {
@@ -13,6 +14,7 @@ const Register = () => {
   const [loading, setLoading] = useState<boolean>(false)
 
   const history = useHistory()
+  const { dispatch } = useAuth()
 
   const registerHandler = async (e: FormEvent) => {
     e.preventDefault()
@@ -31,6 +33,8 @@ const Register = () => {
     setLoading(true)
     register(name, email, password)
       .then(res => {
+        dispatch({ type: 'LOGIN', payload: res.data })
+        localStorage.setItem('authenticated', JSON.stringify(true))
         history.push('/workspace')
       })
       .catch(err => {

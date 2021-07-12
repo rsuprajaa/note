@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { getFolder, getNotesOfFolder, updateFolder } from '../apiCalls/folder'
 import { addNote } from '../apiCalls/notes'
+import NotFound from '../components/Error/NotFound'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
 import NoteCard from '../components/Note/NoteCard'
@@ -18,16 +19,23 @@ const FolderPage = () => {
   const [folderName, setFolderName] = useState<string>('')
   const [savedName, setSavedName] = useState<string>('')
   const [saveLoader, setSaveLoader] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
   const location = useLocation()
   const history = useHistory()
 
   const id = location.pathname.split('/')[2]
 
   useEffect(() => {
-    getFolder(id).then(res => {
-      setFolder(res)
-      setFolderLoading(false)
-    })
+    getFolder(id)
+      .then(res => {
+        setFolder(res)
+        setError('')
+      })
+      .catch(err => {
+        setError('Folder not found')
+      })
+
+    setFolderLoading(false)
     getNotesOfFolder(id).then(res => {
       setNotes(res)
     })
@@ -65,7 +73,6 @@ const FolderPage = () => {
       {folderLoading && <Loader center={true} />}
       {folder && (
         <>
-          {' '}
           <FolderToolbar
             saveLoader={saveLoader}
             setSaveLoader={setSaveLoader}
@@ -100,6 +107,7 @@ const FolderPage = () => {
           </div>
         </>
       )}
+      {error && <NotFound alt={error} />}
     </Layout>
   )
 }

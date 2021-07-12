@@ -4,6 +4,7 @@ import { logout } from '../../apiCalls/auth'
 import { getFavorites } from '../../apiCalls/favorites'
 import { createFolder, getFolders } from '../../apiCalls/folder'
 import { notesShared } from '../../apiCalls/notes'
+import { useAuth } from '../../context/UserContext'
 import { Favorite, Folder, UserRole } from '../../types'
 import Loader from '../Loader/Loader'
 
@@ -17,6 +18,7 @@ const Sidebar = () => {
   const [rolesLoading, setRolesLoading] = useState<boolean>(true)
 
   const history = useHistory()
+  const { dispatch } = useAuth()
 
   useEffect(() => {
     getFolders().then(res => {
@@ -45,6 +47,8 @@ const Sidebar = () => {
 
   const logoutHandler = () => {
     logout().then(res => {
+      dispatch({ type: 'LOGOUT', payload: null })
+      localStorage.removeItem('authenticated')
       history.push('/login')
     })
   }

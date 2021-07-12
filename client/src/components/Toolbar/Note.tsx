@@ -2,7 +2,8 @@ import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { checkFavorite, toggleFavorite } from '../../apiCalls/favorites'
 import { addPermission, deleteNote, getNote, updateNote } from '../../apiCalls/notes'
-import { Folder, Note } from '../../types'
+import { useAuth } from '../../context/UserContext'
+import { Folder, Note, UserRole } from '../../types'
 import { validEmail, validInput } from '../../utils/validation'
 import Alert from '../Alert/Alert'
 import Modal from '../Alert/Modal'
@@ -32,8 +33,13 @@ const NoteToolbar = (props: AppProps) => {
   const [shareLoading, setShareLoading] = useState<boolean>(false)
   const [deleteAction, setDeleteAction] = useState<boolean>(false)
   const [deleteModal, setDeleteModal] = useState<boolean>(false)
+  const [author, setAuthor] = useState<UserRole | null>(null)
+  const [authenticated, setAuthenticated] = useState<boolean>(false)
 
   const history = useHistory()
+  const { state } = useAuth()
+  const loggedInUser = state.user
+
   const {
     savedBody,
     savedName,
@@ -47,6 +53,17 @@ const NoteToolbar = (props: AppProps) => {
     saveLoader,
     setSaveLoader,
   } = props
+
+  useEffect(() => {
+    note.userRole.map(role => {
+      if (role.permission === 'owner') {
+        setAuthor(role)
+      }
+    })
+    if (author && loggedInUser && author.user.id === loggedInUser.id) {
+      setAuthenticated(true)
+    }
+  }, [note, loggedInUser, author])
 
   const saveNoteHandler = () => {
     if ((savedName !== title && validInput(title)) || savedBody !== body) {
@@ -78,7 +95,6 @@ const NoteToolbar = (props: AppProps) => {
   }, [note.id])
 
   const favoriteHandler = () => {
-    console.log(favorite)
     if (!favorite) {
       toggleFavorite(note.id).then(res => {
         setFavorite(true)
@@ -125,51 +141,58 @@ const NoteToolbar = (props: AppProps) => {
         />
       )}
       <div className="float-left">
-        <span
-          className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50"
-          onClick={() => history.push(`/folder/${folder.id}`)}
-        >
-          {folder.name}
-        </span>
-        <span> / </span>
+        {authenticated && (
+          <>
+            <span
+              className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50"
+              onClick={() => history.push(`/folder/${folder.id}`)}
+            >
+              {folder.name}
+            </span>
+            <span> / </span>
+          </>
+        )}
         <span className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50">{note.title}</span>
       </div>
       <div className="float-right">
-        {/* CHECK USER ID AND DISPLAY */}
-        <span
-          className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"
-          onClick={() => setShareMenu(!shareMenu)}
-        >
-          Share
-        </span>
-        {shareMenu && (
-          <ul className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
-            <form onSubmit={shareHandler} className="mb-2">
-              <input
-                type="text"
-                className="w-9/12 px-1 mr-2 text-base border-2 border-gray-300 rounded-md focus:outline-none"
-                value={email || ''}
-                placeholder="Add email"
-                onChange={e => {
-                  setEmail(e.target.value)
-                  setError('')
-                }}
-              />
-              <button type="submit">
-                <i className="fas fa-plus"></i>
-              </button>
-            </form>
-            {error && <Alert message={error} variant="error" size="sm" />}
-            {shareLoading && <Loader message="Adding" />}
-            <div>
-              <p className="mt-2 text-base font-medium">Members</p>
-              <ul>
-                {note.userRole.map(role => (
-                  <MemberCard setNote={setNote} key={role.id} role={role} />
-                ))}
+        {authenticated && (
+          <>
+            <span
+              className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"
+              onClick={() => setShareMenu(!shareMenu)}
+            >
+              Share
+            </span>
+            {shareMenu && (
+              <ul className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
+                <form onSubmit={shareHandler} className="mb-2">
+                  <input
+                    type="text"
+                    className="w-9/12 px-1 mr-2 text-base border-2 border-gray-300 rounded-md focus:outline-none"
+                    value={email || ''}
+                    placeholder="Add email"
+                    onChange={e => {
+                      setEmail(e.target.value)
+                      setError('')
+                    }}
+                  />
+                  <button type="submit">
+                    <i className="fas fa-plus"></i>
+                  </button>
+                </form>
+                {error && <Alert message={error} variant="error" size="sm" />}
+                {shareLoading && <Loader message="Adding" />}
+                <div>
+                  <p className="mt-2 text-base font-medium">Members</p>
+                  <ul>
+                    {note.userRole.map(role => (
+                      <MemberCard setNote={setNote} key={role.id} role={role} />
+                    ))}
+                  </ul>
+                </div>
               </ul>
-            </div>
-          </ul>
+            )}
+          </>
         )}
         <button className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={favoriteHandler}>
           {favorite ? (
@@ -185,18 +208,22 @@ const NoteToolbar = (props: AppProps) => {
         <button className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={() => saveNoteHandler}>
           Save
         </button>
-        <button
-          className="px-2 py-1 ml-1 rounded cursor-pointer text-primary-default hover:bg-basic-50"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <i className="fas fa-ellipsis-h"></i>
-        </button>
-        {menuOpen && (
-          <ul className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12">
-            <li className="flex-grow px-3 py-1 cursor-pointer hover:bg-basic-50" onClick={deleteNoteHandler}>
-              Delete
-            </li>
-          </ul>
+        {authenticated && (
+          <>
+            <button
+              className="px-2 py-1 ml-1 rounded cursor-pointer text-primary-default hover:bg-basic-50"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <i className="fas fa-ellipsis-h"></i>
+            </button>
+            {menuOpen && (
+              <ul className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12">
+                <li className="flex-grow px-3 py-1 cursor-pointer hover:bg-basic-50" onClick={deleteNoteHandler}>
+                  Delete
+                </li>
+              </ul>
+            )}
+          </>
         )}
         {saveLoader && (
           <div className="absolute w-20 right-4">

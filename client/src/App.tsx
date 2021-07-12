@@ -1,17 +1,28 @@
 import axios from 'axios'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import React from 'react'
+import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import './App.css'
 import Favorites from './pages/Favorites'
-import Folder from './pages/Folder'
-import Home from './pages/Home'
+import FolderPage from './pages/Folder'
 import Login from './pages/Login'
-import Note from './pages/Note'
+import NotePage from './pages/Note'
+import NotFound from './pages/NotFound'
 import Register from './pages/Register'
 import Shared from './pages/Shared'
+import Workspace from './pages/Workspace'
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER
 axios.defaults.withCredentials = true
 
+function ProtectedRoute({ ...routeProps }: RouteProps) {
+  const authFromStorage = localStorage.getItem('authenticated')
+  const isAuth = authFromStorage ? JSON.parse(authFromStorage) : false
+  if (isAuth) {
+    return <Route {...routeProps} />
+  } else {
+    return <Redirect to="/login" />
+  }
+}
 function App() {
   return (
     <BrowserRouter>
@@ -22,20 +33,26 @@ function App() {
         <Route exact path="/register">
           <Register />
         </Route>
-        <Route exact path="/workspace">
-          <Home />
-        </Route>
+        <ProtectedRoute exact path="/workspace">
+          <Workspace />
+        </ProtectedRoute>
         <Route exact path="/folder/:id">
-          <Folder />
+          <FolderPage />
         </Route>
         <Route exact path="/notes/:id">
-          <Note />
+          <NotePage />
         </Route>
         <Route exact path="/favorites">
           <Favorites />
         </Route>
         <Route exact path="/shared-with-me">
           <Shared />
+        </Route>
+        <Route exact path="*">
+          <NotFound />
+        </Route>
+        <Route exact path="*">
+          <NotFound />
         </Route>
       </Switch>
     </BrowserRouter>
