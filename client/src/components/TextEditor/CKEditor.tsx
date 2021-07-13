@@ -11,7 +11,6 @@ const Editor = (props: EditorProps) => {
   const { body, setBody } = props
   return (
     <div className="mx-auto mt-4 leading-normal text-primary-default editor">
-      <p>{body}</p>
       <CKEditor
         config={{
           toolbar: [

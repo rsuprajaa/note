@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getNote, updateNote } from '../apiCalls/notes'
+import { createTag, getAllTags } from '../apiCalls/tags'
+import Toast from '../components/Alert/Toast'
 import NotFound from '../components/Error/NotFound'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
+import TagLabel from '../components/Tags/TagLabel'
+import TagsMenu from '../components/Tags/TagsMenu'
 import Editor from '../components/TextEditor/CKEditor'
 import NoteToolbar from '../components/Toolbar/Note'
-import { Note } from '../types'
+import { Note, NoteTag, Tag } from '../types'
+import useOnClickOutside from '../utils/useClickOutside'
 import { validInput } from '../utils/validation'
 
 const AUTOSAVE_INTERVAL = 1000
@@ -22,8 +27,18 @@ const NotePage = () => {
   const [body, setBody] = useState<string>('')
   const [saveLoader, setSaveLoader] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  const [tags, setTags] = useState<NoteTag[] | void>()
+  const [tagsMenu, setTagsMenu] = useState<boolean>(false)
+  const [allTags, setAllTags] = useState<Tag[] | void>()
+  const [tagsError, setTagsError] = useState<string | void>()
+  const [newTag, setNewTag] = useState<string>('')
 
   useEffect(() => {
+    refreshNote(id)
+    setNoteLoading(false)
+  }, [id])
+
+  const refreshNote = (id: string) => {
     getNote(id)
       .then(res => {
         setNote(res)
@@ -32,15 +47,38 @@ const NotePage = () => {
       .catch(err => {
         setError('Note not found')
       })
-    setNoteLoading(false)
-  }, [id])
+  }
 
   useEffect(() => {
     if (note) {
       setBody(note.body)
       setName(note.title)
+      setTags(note.noteTag)
     }
   }, [note])
+
+  useEffect(() => {
+    getAllTags()
+      .then(res => setAllTags(res))
+      .catch(err => console.log(err))
+  }, [note])
+
+  const addTagHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      createTag(newTag)
+        .then(res => {
+          setNewTag('')
+          refreshNote(id)
+        })
+        .catch(err => {
+          setTagsError(err.response.data.message)
+          setTimeout(() => {
+            setTagsError('')
+          }, 3000)
+        })
+      console.log(newTag)
+    }
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -55,6 +93,11 @@ const NotePage = () => {
     }, AUTOSAVE_INTERVAL)
     return () => clearTimeout(timer)
   }, [name, body])
+
+  const editorRef = useRef(null)
+
+  const menuRef = useRef(null)
+  useOnClickOutside(menuRef, () => setTagsMenu(false))
 
   return (
     <Layout>
@@ -82,6 +125,47 @@ const NotePage = () => {
               className="block w-full text-4xl font-bold outline-none text-primary-default"
               onChange={e => setName(e.target.value)}
             />
+            <div className="flex flex-wrap mt-3 mb-2 text-primary-dark">
+              {tags?.map(noteTag => (
+                <div className="flex self-center px-2 py-1 mx-2 text-sm font-medium tracking-wider text-white bg-green-700 rounded-xl">
+                  <TagLabel noteTag={noteTag} refreshNote={refreshNote} />
+                </div>
+              ))}
+              <button
+                onClick={() => setTagsMenu(!tagsMenu)}
+                className="py-1 px-1.5 my-2 rounded hover:bg-basic-50 text-primary-light "
+              >
+                <i className="mr-2 fas fa-plus"></i>
+                Tags
+              </button>
+            </div>
+            {tagsMenu && (
+              <ul
+                ref={menuRef}
+                className="z-10 flex flex-wrap w-10/12 py-1 mr-3 bg-white overflow-clip shadow-custom text-primary-light"
+              >
+                {allTags ? (
+                  allTags.map(tag => {
+                    return (
+                      <>
+                        <TagsMenu note={note} tag={tag} setTagsError={setTagsError} refreshNote={refreshNote} />
+                      </>
+                    )
+                  })
+                ) : (
+                  <p className="mx-2">No tags</p>
+                )}
+                <input
+                  type="text"
+                  className="px-2 py-0.5 mb-1 mx-2 text-sm border-2 border-gray-300 rounded-3xl focus:outline-none font-medium"
+                  value={newTag || ''}
+                  placeholder="Add tag"
+                  onChange={e => setNewTag(e.target.value)}
+                  onKeyPress={addTagHandler}
+                />
+                {tagsError && <Toast variant="error" message={tagsError} />}
+              </ul>
+            )}
             <Editor body={note.body} setBody={setBody} />
           </div>
         </>

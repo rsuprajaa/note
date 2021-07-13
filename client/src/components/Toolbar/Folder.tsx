@@ -1,7 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { deleteFolder, updateFolder } from '../../apiCalls/folder'
 import { Folder } from '../../types'
+import useOnClickOutside from '../../utils/useClickOutside'
 import { validInput } from '../../utils/validation'
 import Modal from '../Alert/Modal'
 import Loader from '../Loader/Loader'
@@ -46,6 +47,9 @@ const FolderToolbar = (props: FolderProps) => {
     }
   }, [deleteAction, history])
 
+  const menuRef = useRef(null)
+  useOnClickOutside(menuRef, () => setMenuOpen(false))
+
   return (
     <div className="px-4 py-3 select-none text-primary-light">
       {deleteModal && (
@@ -74,7 +78,10 @@ const FolderToolbar = (props: FolderProps) => {
           <i className="fas fa-ellipsis-h"></i>
         </span>
         {menuOpen && (
-          <ul className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12">
+          <ul
+            ref={menuRef}
+            className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12"
+          >
             <li className="flex-grow px-3 py-1 cursor-pointer hover:bg-basic-50" onClick={deleteFolderHandler}>
               Delete
             </li>

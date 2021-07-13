@@ -12,6 +12,16 @@ export const getAllTags = async () => {
 }
 
 export const addTagsToNote = async (noteId: string, tagId: string) => {
-  const { data } = await axios.post<Tag>('/add', { noteId, tagId })
+  const { data } = await axios.post<Tag>('/tags/add', { noteId, tagId })
+  return data
+}
+
+export const removeTagFromNote = async (noteId: string, tagId: string) => {
+  const { data } = await axios.post('/tags/remove', { noteId, tagId })
+  return data
+}
+
+export const deleteTag = async (tagId: string) => {
+  const { data } = await axios.delete(`/tags/${tagId}`)
   return data
 }

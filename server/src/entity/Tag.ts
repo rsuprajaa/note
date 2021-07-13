@@ -15,7 +15,7 @@ export default class Tag extends Model {
   note: Note[]
 
   // created by
-  @ManyToOne(() => User, user => user.tags, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, user => user.tags, { nullable: false, onDelete: 'CASCADE', eager: true })
   user: User
 
   constructor(tag: Partial<Tag>) {

@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 
 import { NextFunction, Request, Response } from 'express'
-import { In } from 'typeorm'
 import Note from '../entity/Note'
 import NoteTag from '../entity/Note_Tag'
 import Tag from '../entity/Tag'
@@ -105,22 +104,8 @@ export const removeTagFromNote = async (req: Request, res: Response, next: NextF
       res.status(401)
       throw new Error('Unauthorized')
     }
-    if (tag.user.id !== user.id) {
-      res.status(401)
-      throw new Error('Unauthorized access')
-    }
     await NoteTag.delete({ tag, note })
     return res.status(200).json('Tag deleted')
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const getNotesWithTags = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-  try {
-    const tagsArray: Tag[] = req.body.tags
-    const notes = await NoteTag.find({ where: { tag: In(tagsArray) } })
-    return res.status(200).json(notes)
   } catch (err) {
     next(err)
   }

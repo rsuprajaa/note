@@ -23,7 +23,7 @@ export interface Note {
   updatedAt: string
   folder: Folder
   userRole: UserRole[]
-  tags: NoteTag[]
+  noteTag: NoteTag[]
 }
 
 export interface Favorite {

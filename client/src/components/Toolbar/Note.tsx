@@ -1,9 +1,10 @@
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { checkFavorite, toggleFavorite } from '../../apiCalls/favorites'
 import { addPermission, deleteNote, getNote, updateNote } from '../../apiCalls/notes'
 import { useAuth } from '../../context/UserContext'
 import { Folder, Note, UserRole } from '../../types'
+import useOnClickOutside from '../../utils/useClickOutside'
 import { validEmail, validInput } from '../../utils/validation'
 import Alert from '../Alert/Alert'
 import Modal from '../Alert/Modal'
@@ -126,6 +127,9 @@ const NoteToolbar = (props: AppProps) => {
     setShareLoading(false)
   }
 
+  const menuRef = useRef(null)
+  useOnClickOutside(menuRef, () => setMenuOpen(false))
+
   return (
     <div className="px-4 py-3 select-none text-primary-light">
       {deleteModal && (
@@ -217,7 +221,10 @@ const NoteToolbar = (props: AppProps) => {
               <i className="fas fa-ellipsis-h"></i>
             </button>
             {menuOpen && (
-              <ul className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12">
+              <ul
+                ref={menuRef}
+                className="absolute flex flex-col justify-center py-2 mr-3 bg-white shadow-custom text-primary-light w-60 right-1 top-12"
+              >
                 <li className="flex-grow px-3 py-1 cursor-pointer hover:bg-basic-50" onClick={deleteNoteHandler}>
                   Delete
                 </li>
