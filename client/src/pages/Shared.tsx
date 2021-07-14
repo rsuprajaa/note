@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { notesShared } from '../apiCalls/notes'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
+import Meta from '../components/Meta/MetaData'
 import NoteCard from '../components/Note/NoteCard'
 import { UserRole } from '../types'
 
@@ -18,6 +19,7 @@ const Shared = () => {
 
   return (
     <Layout>
+      <Meta title="Shared With Me | Notely" />
       {rolesLoading ? (
         <Loader center={true} />
       ) : (

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from 'express'
+import { getManager } from 'typeorm'
 import Folder from '../entity/Folder'
 import Note from '../entity/Note'
 import User from '../entity/User'
@@ -51,7 +52,7 @@ export const getNote = async (req: Request, res: Response, next: NextFunction): 
 export const updateNote = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const { user } = res.locals
-    const { title, body, priority } = req.body
+    const { title, body, subject } = req.body
     const noteId = req.params.id
     const note = await Note.findOne({ id: noteId })
     if (!note) {
@@ -65,7 +66,7 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
     }
     note.body = body || ''
     note.title = title || note.title
-    note.priority = priority || note.priority
+    note.subject = subject || note.subject
     await note.save()
     return res.status(200).json(note)
   } catch (err) {
@@ -163,6 +164,21 @@ export const sharedWithUser = async (req: Request, res: Response, next: NextFunc
     const { user } = res.locals
     const notesShared = await UserRole.find({ user, permission: 'member' })
     return res.status(200).json(notesShared)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const searchByTitle = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    const { user } = res.locals
+    const { query } = req.body
+    const entityManager = await getManager()
+    const notes = await entityManager.query(
+      `SELECT title, notes.id FROM notes join user_roles on user_roles.resource_id = notes.id left join users on user_roles.user_id = users.id WHERE users.id = $1 AND notes.title like $2 GROUP BY notes.id`,
+      [user.id, `%${query.toLowerCase()}%`]
+    )
+    return res.status(200).json(notes)
   } catch (err) {
     next(err)
   }

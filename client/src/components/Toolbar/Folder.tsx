@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { deleteFolder, updateFolder } from '../../apiCalls/folder'
-import { Folder } from '../../types'
+import { getAllTags } from '../../apiCalls/tags'
+import { Folder, Note, Tag } from '../../types'
 import useOnClickOutside from '../../utils/useClickOutside'
 import { validInput } from '../../utils/validation'
 import Modal from '../Alert/Modal'
 import Loader from '../Loader/Loader'
+import TagsToolbarMenu from '../Tags/TagsToolbarMenu'
 
 interface FolderProps {
   folder: Folder
@@ -15,13 +17,16 @@ interface FolderProps {
   setFolderName: React.Dispatch<React.SetStateAction<string>>
   saveLoader: boolean
   setSaveLoader: Dispatch<SetStateAction<boolean>>
+  setNotes: Dispatch<SetStateAction<void | Note[] | undefined>>
 }
 
 const FolderToolbar = (props: FolderProps) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const { folder, savedName, setSavedName, folderName, setFolderName, setSaveLoader, saveLoader } = props
+  const { folder, savedName, setSavedName, folderName, setSaveLoader, saveLoader, setNotes } = props
   const [deleteModal, setDeleteModal] = useState<boolean>(false)
   const [deleteAction, setDeleteAction] = useState<boolean>(false)
+  const [queryMenu, setQueryMenu] = useState<boolean>(false)
+  const [allTags, setAllTags] = useState<Tag[] | void>()
 
   const history = useHistory()
 
@@ -47,8 +52,16 @@ const FolderToolbar = (props: FolderProps) => {
     }
   }, [deleteAction, history])
 
+  useEffect(() => {
+    getAllTags()
+      .then(res => setAllTags(res))
+      .catch(err => console.log(err))
+  }, [])
+
   const menuRef = useRef(null)
+  const queryMenuRef = useRef(null)
   useOnClickOutside(menuRef, () => setMenuOpen(false))
+  useOnClickOutside(queryMenuRef, () => setQueryMenu(false))
 
   return (
     <div className="px-4 py-3 select-none text-primary-light">
@@ -68,6 +81,31 @@ const FolderToolbar = (props: FolderProps) => {
         <span className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50">{folder.name}</span>
       </div>
       <div className="float-right">
+        <span
+          onClick={() => setQueryMenu(!queryMenu)}
+          className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"
+        >
+          Search by tags
+        </span>
+        {queryMenu && (
+          <div
+            ref={queryMenuRef}
+            className="absolute flex flex-col justify-center py-4 mr-3 overflow-auto bg-white max-h-80 shadow-custom text-primary-light w-60 right-5 top-12"
+          >
+            {' '}
+            {allTags ? (
+              allTags.map(tag => {
+                return (
+                  <>
+                    <TagsToolbarMenu setNotes={setNotes} tag={tag} folder={folder} />
+                  </>
+                )
+              })
+            ) : (
+              <p className="mx-2">No tags</p>
+            )}
+          </div>
+        )}
         <span className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={saveFolderHandler}>
           Save
         </span>

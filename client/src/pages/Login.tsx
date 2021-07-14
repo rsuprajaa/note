@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { login } from '../apiCalls/auth'
 import Alert from '../components/Alert/Alert'
 import Loader from '../components/Loader/Loader'
+import Meta from '../components/Meta/MetaData'
 import { useAuth } from '../context/UserContext'
 import { validEmail, validInput } from '../utils/validation'
 
@@ -40,6 +41,7 @@ const Login = () => {
 
   return (
     <div className="w-screen min-h-screen mx-auto">
+      <Meta title="Login | Notely" />
       <div className="w-5/6 px-8 py-12 m-auto md:w-2/6 mt-28">
         <h1 className="px-4 mb-4 text-4xl font-bold text-center">Login</h1>
         {loading && <Loader center={true} />}

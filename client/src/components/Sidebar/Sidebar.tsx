@@ -18,7 +18,7 @@ const Sidebar = () => {
   const [rolesLoading, setRolesLoading] = useState<boolean>(true)
 
   const history = useHistory()
-  const { dispatch } = useAuth()
+  const { state, dispatch } = useAuth()
 
   useEffect(() => {
     getFolders().then(res => {
@@ -58,6 +58,9 @@ const Sidebar = () => {
       {showSidebar ? (
         <div className="box-border w-56 min-h-screen py-4 font-medium break-all transition-all duration-200 ease-in select-none position-fixed bg-basic-100 text-primary-light">
           <div>
+            <p className="py-2 text-center cursor-pointer hover:bg-basic-50" onClick={() => history.push('/workspace')}>
+              {state.user?.name}'s Workspace
+            </p>
             <div className="flex justify-end mx-2 my-2">
               <button className="px-3 py-1 font-medium rounded hover:bg-basic-50" onClick={logoutHandler}>
                 Logout
@@ -70,10 +73,9 @@ const Sidebar = () => {
                   onClick={() => setShowSidebar(!showSidebar)}
                 ></i>
               </div>
-              <h1>LOGO</h1>
             </div>
             <button
-              className="block w-9/12 px-4 py-2 m-auto my-4 font-medium text-center text-white bg-blue-800 rounded hover:bg-blue-700"
+              className="block w-9/12 px-4 py-2 m-auto my-4 font-medium text-center text-white bg-green-700 rounded hover:bg-green-800"
               onClick={createFolderHandler}
             >
               <i className="fas fa-plus"></i> New Folder

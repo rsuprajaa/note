@@ -5,6 +5,7 @@ import {
   deleteNote,
   getNote,
   removePermission,
+  searchByTitle,
   sharedWithUser,
   updateNote,
 } from '../controllers/note'
@@ -18,5 +19,6 @@ router.post('/', auth, addNote)
 router.post('/add-user', auth, addPermission)
 router.post('/remove-user', auth, removePermission)
 router.get('/filter/shared', auth, sharedWithUser)
+router.post('/filter/search', auth, searchByTitle)
 
 export default router

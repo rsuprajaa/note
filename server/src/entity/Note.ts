@@ -18,7 +18,7 @@ export default class Note extends Model {
 
   @Column({ nullable: true })
   @Length(1, 255)
-  priority: string
+  subject: string
 
   @ManyToOne(() => Folder, folder => folder.notes, { nullable: false, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'folder_id' })

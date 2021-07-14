@@ -17,6 +17,10 @@ module.exports = {
           dark: '#2d2f34',
           default: 'rgba(55,53,47)',
         },
+        green: {
+          light: '#f5f9f7',
+          primary: '#084c2d',
+        },
       },
     },
     theme: {},

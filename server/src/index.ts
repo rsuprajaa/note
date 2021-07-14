@@ -39,6 +39,7 @@ app.use((err, _req: Request, res: Response, _next: NextFunction) => {
 })
 
 const port = process.env.PORT || 5000
+
 createConnection()
   // eslint-disable-next-line no-unused-vars
   .then(async _ => {

@@ -2,15 +2,15 @@ export interface User {
   id: string
   name: string
   email: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Folder {
   id: string
   name: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
   user: User
 }
 
@@ -19,8 +19,8 @@ export interface Note {
   title: string
   body: string
   priority: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
   folder: Folder
   userRole: UserRole[]
   noteTag: NoteTag[]
@@ -30,15 +30,15 @@ export interface Favorite {
   id: string
   user: User
   note: Note
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Tag {
   id: string
   name: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface UserRole {

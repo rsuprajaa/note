@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Tag } from '../types'
+import { Note, Tag } from '../types'
 
 export const createTag = async (name: string) => {
   const { data } = await axios.post<Tag>(`/tags`, { name })
@@ -23,5 +23,10 @@ export const removeTagFromNote = async (noteId: string, tagId: string) => {
 
 export const deleteTag = async (tagId: string) => {
   const { data } = await axios.delete(`/tags/${tagId}`)
+  return data
+}
+
+export const filterByTags = async (folderId: string, tagId: string) => {
+  const { data } = await axios.post<Note[]>('/tags/filter-by-tags', { folderId, tagId })
   return data
 }

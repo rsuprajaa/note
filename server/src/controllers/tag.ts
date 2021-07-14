@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 
 import { NextFunction, Request, Response } from 'express'
+import { getManager } from 'typeorm'
 import Note from '../entity/Note'
 import NoteTag from '../entity/Note_Tag'
 import Tag from '../entity/Tag'
@@ -106,6 +107,20 @@ export const removeTagFromNote = async (req: Request, res: Response, next: NextF
     }
     await NoteTag.delete({ tag, note })
     return res.status(200).json('Tag deleted')
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const filterNotesByTags = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    const { folderId, tagId } = req.body
+    const entityManager = await getManager()
+    const notes = await entityManager.query(
+      `SELECT title, body, notes.id, notes.updated_at FROM notes join note_tags on note_tags.note_id = notes.id where notes.folder_id = $1 AND note_tags.tag_id =$2 GROUP BY notes.id`,
+      [folderId, tagId]
+    )
+    return res.status(200).json(notes)
   } catch (err) {
     next(err)
   }

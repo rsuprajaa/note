@@ -6,6 +6,7 @@ import Toast from '../components/Alert/Toast'
 import NotFound from '../components/Error/NotFound'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
+import Meta from '../components/Meta/MetaData'
 import TagLabel from '../components/Tags/TagLabel'
 import TagsMenu from '../components/Tags/TagsMenu'
 import Editor from '../components/TextEditor/CKEditor'
@@ -101,6 +102,7 @@ const NotePage = () => {
 
   return (
     <Layout>
+      {note && <Meta title={`${note?.title} | Notely`} />}
       {noteLoading && <Loader center={true} />}
       {note && (
         <>

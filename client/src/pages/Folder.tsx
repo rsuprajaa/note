@@ -5,6 +5,7 @@ import { addNote } from '../apiCalls/notes'
 import NotFound from '../components/Error/NotFound'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
+import Meta from '../components/Meta/MetaData'
 import NoteCard from '../components/Note/NoteCard'
 import FolderToolbar from '../components/Toolbar/Folder'
 import { Folder, Note } from '../types'
@@ -70,6 +71,7 @@ const FolderPage = () => {
 
   return (
     <Layout>
+      {folder && <Meta title={`${folder.name} | Notely`} />}
       {folderLoading && <Loader center={true} />}
       {folder && (
         <>
@@ -81,6 +83,7 @@ const FolderPage = () => {
             savedName={savedName}
             setSavedName={setSavedName}
             folder={folder}
+            setNotes={setNotes}
           />
           <div className="max-w-6xl mx-auto mt-12">
             <input

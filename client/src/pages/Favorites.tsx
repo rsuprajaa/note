@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getFavorites } from '../apiCalls/favorites'
 import Layout from '../components/Layout/Layout'
 import Loader from '../components/Loader/Loader'
+import Meta from '../components/Meta/MetaData'
 import NoteCard from '../components/Note/NoteCard'
 import { Favorite } from '../types'
 
@@ -22,6 +23,7 @@ const Favorites = () => {
 
   return (
     <Layout>
+      <Meta title="Favorites | Notely" />
       {favoritesLoading ? (
         <Loader center={true} />
       ) : (

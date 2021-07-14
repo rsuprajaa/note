@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Note, UserRole } from '../types'
 
 export const addNote = async (folderId: string) => {
-  const res = await axios.post<Note>(`/notes`, { folderId })
+  const res = await axios.post<Note>('/notes', { folderId })
   return res.data
 }
 
@@ -22,16 +22,21 @@ export const deleteNote = async (id: string) => {
 }
 
 export const addPermission = async (noteId: string, email: string) => {
-  const res = await axios.post(`/notes/add-user`, { noteId, email })
+  const res = await axios.post('/notes/add-user', { noteId, email })
   return res.data
 }
 
 export const removePermission = async (noteId: string, userId: string) => {
-  const { data } = await axios.post(`/notes/remove-user`, { noteId, userId })
+  const { data } = await axios.post('/notes/remove-user', { noteId, userId })
   return data
 }
 
 export const notesShared = async () => {
-  const { data } = await axios.get<UserRole[]>(`/notes/filter/shared`)
+  const { data } = await axios.get<UserRole[]>('/notes/filter/shared')
+  return data
+}
+
+export const searchNote = async (query: string) => {
+  const { data } = await axios.post('/notes/filter/search', { query })
   return data
 }

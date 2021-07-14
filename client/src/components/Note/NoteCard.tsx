@@ -11,7 +11,7 @@ const NoteCard = ({ note }: { note: Note }) => {
     >
       <div className="mb-2">
         <span className="inline-block mb-1 text-sm align-bottom text-primary-light">
-          <em>Last updated on {format(new Date(note.updatedAt), 'dd-MMMM')}</em>
+          <em>Last updated on {format(new Date(note.updated_at), 'dd-MMMM')}</em>
         </span>
         <p className="mb-1 text-lg font-bold">{note.title}</p>
       </div>
