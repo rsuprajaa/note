@@ -144,7 +144,7 @@ const NoteToolbar = (props: AppProps) => {
           setModal={setDeleteModal}
         />
       )}
-      <div className="float-left">
+      <div className="md:float-left">
         {authenticated && (
           <>
             <span
@@ -158,7 +158,7 @@ const NoteToolbar = (props: AppProps) => {
         )}
         <span className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50">{note.title}</span>
       </div>
-      <div className="float-right">
+      <div className="flex justify-between md:float-right">
         {authenticated && (
           <>
             <span

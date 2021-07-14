@@ -4,18 +4,10 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css'
 import App from './App'
 import { UserContextProvider } from './context/UserContext'
 import './index.css'
-import reportWebVitals from './reportWebVitals.js'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <UserContextProvider>
-      <App />
-    </UserContextProvider>
-  </React.StrictMode>,
+  <UserContextProvider>
+    <App />
+  </UserContextProvider>,
   document.getElementById('root')
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()

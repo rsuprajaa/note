@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { register } from '../apiCalls/auth'
 import Alert from '../components/Alert/Alert'
 import Loader from '../components/Loader/Loader'
@@ -47,7 +47,7 @@ const Register = () => {
   return (
     <div className="w-screen min-h-screen mx-auto">
       <Meta title="Register | Notely" />
-      <div className="w-2/6 px-8 py-12 m-auto mt-28">
+      <div className="px-8 py-12 m-auto md:w-3/6 lg:w-2/6 mt-28">
         <h1 className="px-4 mb-4 text-4xl font-bold text-center">Register</h1>
         {loading && <Loader center={true} />}
         {error && <Alert message={error} variant="error" />}
@@ -81,6 +81,12 @@ const Register = () => {
           >
             Sign Up
           </button>
+          <p className="mt-2 font-medium">
+            Already Have an account?{' '}
+            <Link className="text-blue-800" to="/login">
+              Log In
+            </Link>
+          </p>
         </form>
       </div>
     </div>

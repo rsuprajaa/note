@@ -65,7 +65,7 @@ const NotePage = () => {
   }, [note])
 
   const addTagHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (validInput(newTag) && e.key === 'Enter') {
       createTag(newTag)
         .then(res => {
           setNewTag('')
@@ -119,7 +119,7 @@ const NotePage = () => {
             note={note}
             folder={note.folder}
           />
-          <div className="max-w-6xl mx-auto mt-12">
+          <div className="w-full mx-auto mt-12 md:max-w-6xl">
             <input
               type="text"
               value={name || ''}
@@ -144,7 +144,7 @@ const NotePage = () => {
             {tagsMenu && (
               <ul
                 ref={menuRef}
-                className="z-10 flex flex-wrap w-10/12 py-1 mr-3 bg-white overflow-clip shadow-custom text-primary-light"
+                className="z-10 flex flex-wrap py-1 mr-3 bg-white md:w-10/12 overflow-clip shadow-custom text-primary-light"
               >
                 {allTags ? (
                   allTags.map(tag => {

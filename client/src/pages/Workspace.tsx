@@ -38,7 +38,7 @@ const Workspace = () => {
   return (
     <Layout>
       <Meta title="Workspace | Notely" />
-      <div className="w-4/5 mx-auto mt-5">
+      <div className="mx-auto mt-5 md:w-4/5">
         <h1 className="text-4xl font-bold text-primary-default">Workspace</h1>
         <input
           type="text"

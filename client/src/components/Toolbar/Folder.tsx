@@ -77,10 +77,10 @@ const FolderToolbar = (props: FolderProps) => {
           setModal={setDeleteModal}
         />
       )}
-      <div className="float-left">
+      <div className="md:float-left">
         <span className="px-2 py-1 mr-1 rounded cursor-pointer hover:bg-basic-50">{folder.name}</span>
       </div>
-      <div className="float-right">
+      <div className="flex justify-between md:float-right">
         <span
           onClick={() => setQueryMenu(!queryMenu)}
           className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"

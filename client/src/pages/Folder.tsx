@@ -102,7 +102,7 @@ const FolderPage = () => {
                 Add Note
               </button>
             </div>
-            <div className="grid grid-cols-4 mx-1 gap-x-8 gap-y-2">
+            <div className="grid mx-3 mt-4 md:mx-1 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-2">
               {notes?.map(note => (
                 <NoteCard key={note.id} note={note} />
               ))}

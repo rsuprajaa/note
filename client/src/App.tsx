@@ -1,15 +1,17 @@
 import axios from 'axios'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import './App.css'
-import Favorites from './pages/Favorites'
-import FolderPage from './pages/Folder'
-import Login from './pages/Login'
-import NotePage from './pages/Note'
-import NotFound from './pages/NotFound'
-import Register from './pages/Register'
-import Shared from './pages/Shared'
-import Workspace from './pages/Workspace'
+import Loader from './components/Loader/Loader'
+
+const NotePage = React.lazy(() => import('./pages/Note'))
+const FolderPage = React.lazy(() => import('./pages/Folder'))
+const Favorites = React.lazy(() => import('./pages/Favorites'))
+const Shared = React.lazy(() => import('./pages/Shared'))
+const Workspace = React.lazy(() => import('./pages/Workspace'))
+const Login = React.lazy(() => import('./pages/Login'))
+const Register = React.lazy(() => import('./pages/Register'))
+const NotFound = React.lazy(() => import('./pages/NotFound'))
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER
 axios.defaults.withCredentials = true
@@ -28,31 +30,44 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/login">
-          <Login />
+          <Suspense fallback={<Loader center={true} />}>
+            <Login />
+          </Suspense>
         </Route>
         <Route exact path="/register">
-          <Register />
+          <Suspense fallback={<Loader center={true} />}>
+            <Register />
+          </Suspense>
         </Route>
         <ProtectedRoute exact path="/workspace">
-          <Workspace />
+          <Suspense fallback={<Loader center={true} />}>
+            <Workspace />
+          </Suspense>
         </ProtectedRoute>
-        <Route exact path="/folder/:id">
-          <FolderPage />
-        </Route>
-        <Route exact path="/notes/:id">
-          <NotePage />
-        </Route>
-        <Route exact path="/favorites">
-          <Favorites />
-        </Route>
-        <Route exact path="/shared-with-me">
-          <Shared />
-        </Route>
+        <ProtectedRoute exact path="/folder/:id">
+          <Suspense fallback={<Loader center={true} />}>
+            <FolderPage />
+          </Suspense>
+        </ProtectedRoute>
+        <ProtectedRoute exact path="/notes/:id">
+          <Suspense fallback={<Loader center={true} />}>
+            <NotePage />
+          </Suspense>
+        </ProtectedRoute>
+        <ProtectedRoute exact path="/favorites">
+          <Suspense fallback={<Loader center={true} />}>
+            <Favorites />
+          </Suspense>
+        </ProtectedRoute>
+        <ProtectedRoute exact path="/shared-with-me">
+          <Suspense fallback={<Loader center={true} />}>
+            <Shared />
+          </Suspense>
+        </ProtectedRoute>
         <Route exact path="*">
-          <NotFound />
-        </Route>
-        <Route exact path="*">
-          <NotFound />
+          <Suspense fallback={<Loader center={true} />}>
+            <NotFound />
+          </Suspense>
         </Route>
       </Switch>
     </BrowserRouter>

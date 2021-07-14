@@ -25,7 +25,7 @@ const Shared = () => {
       ) : (
         <div className="max-w-6xl mx-auto mt-12">
           <h1 className="text-5xl font-bold">Shared with me</h1>
-          <div className="grid grid-cols-4 mx-1 mt-4 gap-x-8 gap-y-2">
+          <div className="grid mx-3 mt-4 md:mx-1 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-2">
             {roles && roles.length > 0 ? (
               roles.map(role => <NoteCard key={role.resource.id} note={role.resource} />)
             ) : (
