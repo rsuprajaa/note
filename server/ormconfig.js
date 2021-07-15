@@ -5,7 +5,7 @@ module.exports = {
   // username: process.env.DB_NAME,
   // password: process.env.DB_PASSWORD,
   database: 'notes',
-  synchronize: false,
+  synchronize: true,
   logging: true,
   url: process.env.DATABASE_URL,
   ssl: true,
