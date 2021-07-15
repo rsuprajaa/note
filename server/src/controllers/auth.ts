@@ -49,7 +49,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       cookie.serialize('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 2147483647,
         path: '/',
       })
