@@ -13,17 +13,8 @@ import tagRoutes from './routes/tag'
 dotenv.config()
 
 const app = express()
-app.use(
-  cors({
-    credentials: true,
-    origin: process.env.ORIGIN,
-    optionsSuccessStatus: 200,
-  })
-)
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  next()
-})
+
+app.use(cors({ credentials: true }))
 
 app.use(express.json())
 app.use(cookieParser())
