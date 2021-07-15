@@ -24,7 +24,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       cookie.serialize('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
+        sameSite: 'lax',
         maxAge: 2147483647,
         path: '/',
       })
