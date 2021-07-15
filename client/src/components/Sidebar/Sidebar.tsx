@@ -67,6 +67,9 @@ const Sidebar = () => {
               </p>
             )}
             <div className="flex content-center justify-between px-2 my-3">
+              <Link to="/" className="block px-3 py-1 font-medium rounded hover:bg-basic-50">
+                Home
+              </Link>
               <button className="block px-3 py-1 font-medium rounded hover:bg-basic-50" onClick={logoutHandler}>
                 Logout
               </button>

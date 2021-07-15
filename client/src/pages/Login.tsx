@@ -41,6 +41,9 @@ const Login = () => {
 
   return (
     <div className="w-screen min-h-screen mx-auto">
+      <Link to="/" className="block px-6 py-4 text-xl font-semibold">
+        Home
+      </Link>
       <Meta title="Login | Notely" />
       <div className="px-8 py-12 m-auto md:w-3/6 lg:w-2/6 mt-28">
         <h1 className="px-4 mb-4 text-4xl font-bold text-center">Login</h1>

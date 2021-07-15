@@ -12,6 +12,7 @@ const Workspace = React.lazy(() => import('./pages/Workspace'))
 const Login = React.lazy(() => import('./pages/Login'))
 const Register = React.lazy(() => import('./pages/Register'))
 const NotFound = React.lazy(() => import('./pages/NotFound'))
+const Home = React.lazy(() => import('./pages/Home'))
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER
 axios.defaults.withCredentials = true
@@ -29,6 +30,11 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
+        <Route exact path="/">
+          <Suspense fallback={<Loader center={true} />}>
+            <Home />
+          </Suspense>
+        </Route>
         <Route exact path="/login">
           <Suspense fallback={<Loader center={true} />}>
             <Login />
