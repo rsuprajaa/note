@@ -165,14 +165,16 @@ const NoteToolbar = (props: AppProps) => {
         {authenticated && (
           <>
             <span
-              ref={shareMenuRef}
               className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"
               onClick={() => setShareMenu(!shareMenu)}
             >
               Share
             </span>
             {shareMenu && (
-              <ul className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12">
+              <ul
+                ref={shareMenuRef}
+                className="absolute z-10 flex flex-col px-3 py-2 mr-3 overflow-hidden bg-white shadow-custom text-primary-light w-60 right-48 top-12"
+              >
                 <form onSubmit={shareHandler} className="mb-2">
                   <input
                     type="text"
