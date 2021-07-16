@@ -130,6 +130,9 @@ const NoteToolbar = (props: AppProps) => {
   const menuRef = useRef(null)
   useOnClickOutside(menuRef, () => setMenuOpen(false))
 
+  const shareMenuRef = useRef(null)
+  useOnClickOutside(shareMenuRef, () => setShareMenu(false))
+
   return (
     <div className="px-4 py-3 select-none text-primary-light">
       {deleteModal && (
@@ -162,6 +165,7 @@ const NoteToolbar = (props: AppProps) => {
         {authenticated && (
           <>
             <span
+              ref={shareMenuRef}
               className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50"
               onClick={() => setShareMenu(!shareMenu)}
             >

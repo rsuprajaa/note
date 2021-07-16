@@ -11,7 +11,7 @@ import Loader from '../Loader/Loader'
 const Sidebar = () => {
   const [folders, setFolders] = useState<void | Folder[]>([])
   const [foldersLoading, setFoldersLoading] = useState<boolean>(true)
-  const [showSidebar, setShowSidebar] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(false)
   const [favorites, setFavorites] = useState<Favorite[] | void>()
   const [favoritesLoading, setFavoritesLoading] = useState<boolean>(true)
   const [roles, setRoles] = useState<UserRole[] | void>()
@@ -48,7 +48,6 @@ const Sidebar = () => {
   const logoutHandler = () => {
     logout().then(res => {
       dispatch({ type: 'LOGOUT', payload: null })
-      localStorage.removeItem('authenticated')
       history.push('/login')
     })
   }

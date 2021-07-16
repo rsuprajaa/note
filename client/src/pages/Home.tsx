@@ -1,11 +1,22 @@
 import { useHistory } from 'react-router-dom'
+import { login } from '../apiCalls/auth'
 import HomeImg from '../assets/home.png'
 import Meta from '../components/Meta/MetaData'
 import { useAuth } from '../context/UserContext'
 
 const Home = () => {
-  const { state } = useAuth()
+  const { state, dispatch } = useAuth()
   const history = useHistory()
+  const guestUserLogin = () => {
+    login('jack@example.com', '123456')
+      .then(res => {
+        dispatch({ type: 'LOGIN', payload: res.data })
+        history.push('/workspace')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
   return (
     <div className="max-w-full max-h-screen text-center">
       <Meta title="Home | Notely" />
@@ -24,7 +35,11 @@ const Home = () => {
           </ul>
         </nav>
       )}
-      <main className="flex content-center justify-around mt-28 md:mt-40">
+      <main
+        className={`flex content-center justify-around mt-20 md:mt-32 ${
+          state.authenticated ? 'mt-24 md:mt-36' : 'mt-28 md:mt-40'
+        }`}
+      >
         <div className="flex flex-col self-center py-3">
           <h1 className="flex flex-col my-3 mt-5 text-5xl font-bold ">
             <span>Notely</span>
@@ -37,6 +52,11 @@ const Home = () => {
             Go to workspace <i className="text-xs fas fa-chevron-right"></i>
             <i className="text-xs fas fa-chevron-right"></i>
           </button>
+          {!state.authenticated && (
+            <button onClick={guestUserLogin} className="self-center px-2.5 py-1.5 mt-4 text-white bg-green-800">
+              Login as guest user
+            </button>
+          )}
         </div>
         <img src={HomeImg} alt="home" className="hidden w-4/12 object-fit lg:block" />
       </main>

@@ -129,7 +129,10 @@ const NotePage = () => {
             />
             <div className="flex flex-wrap mt-3 mb-2 text-primary-dark">
               {tags?.map(noteTag => (
-                <div className="flex self-center px-2 py-1 mx-2 text-sm font-medium tracking-wider text-white bg-green-700 rounded-xl">
+                <div
+                  key={noteTag.id}
+                  className="flex self-center px-2 py-1 mx-2 text-sm font-medium tracking-wider text-white bg-green-700 rounded-xl"
+                >
                   <TagLabel noteTag={noteTag} refreshNote={refreshNote} />
                 </div>
               ))}

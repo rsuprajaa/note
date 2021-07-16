@@ -39,12 +39,12 @@ const TagsMenu = ({
     if (deleteAction) {
       deleteTag(tag.id)
         .then(res => {
-          console.log(res)
           refreshNote(note.id)
         })
         .catch(err => console.log(err))
     }
-  }, [deleteAction])
+    setMenuOpen(false)
+  }, [deleteAction, note.id])
 
   const menuRef = useRef(null)
   useOnClickOutside(menuRef, () => setMenuOpen(false))

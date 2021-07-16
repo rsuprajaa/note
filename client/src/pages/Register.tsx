@@ -35,7 +35,6 @@ const Register = () => {
     register(name, email, password)
       .then(res => {
         dispatch({ type: 'LOGIN', payload: res.data })
-        localStorage.setItem('authenticated', JSON.stringify(true))
         history.push('/workspace')
       })
       .catch(err => {

@@ -30,7 +30,6 @@ const Login = () => {
     login(email, password)
       .then(res => {
         dispatch({ type: 'LOGIN', payload: res.data })
-        localStorage.setItem('authenticated', JSON.stringify(true))
         history.push('/workspace')
       })
       .catch(err => {
@@ -55,12 +54,14 @@ const Login = () => {
           <input
             className="block w-full px-3 py-1 border-2 border-primary-light"
             type="email"
+            placeholder="jack@example.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
           <br></br>
           <label>Password</label>
           <input
+            placeholder="123456"
             className="block w-full px-3 py-1 border-2 border-primary-light"
             type="password"
             value={password}
@@ -79,6 +80,13 @@ const Login = () => {
             </Link>
           </p>
         </form>
+        <p className="mt-2 underline">Guest user credentials</p>
+        <p>
+          email: <span className="font-medium">jack@example.com</span>
+        </p>
+        <p>
+          password: <span className="font-medium">123456</span>
+        </p>
       </div>
     </div>
   )

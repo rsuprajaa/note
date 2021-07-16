@@ -47,15 +47,15 @@ function UserContextProvider({ children }: UserContextProviderProps) {
 
   async function loadUser() {
     try {
+      dispatch({ type: 'LOADING', payload: null })
       const res = await axios.get<User>('/auth')
       dispatch({ type: 'LOGIN', payload: res.data })
     } catch (err) {
-      console.log(err)
+      dispatch({ type: 'LOGOUT', payload: null })
     }
   }
 
   useEffect(() => {
-    dispatch({ type: 'LOADING', payload: null })
     loadUser()
   }, [])
 

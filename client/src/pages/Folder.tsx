@@ -67,7 +67,7 @@ const FolderPage = () => {
       }
     }, AUTOSAVE_INTERVAL)
     return () => clearTimeout(timer)
-  }, [folderName])
+  }, [folderName, id])
 
   return (
     <Layout>

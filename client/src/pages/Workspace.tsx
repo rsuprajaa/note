@@ -3,27 +3,13 @@ import { useHistory } from 'react-router-dom'
 import { searchNote } from '../apiCalls/notes'
 import Layout from '../components/Layout/Layout'
 import Meta from '../components/Meta/MetaData'
-import { useAuth } from '../context/UserContext'
 import { Note } from '../types'
 
 const Workspace = () => {
-  const { state } = useAuth()
   const [query, setQuery] = useState<string>('')
   const [notes, setNotes] = useState<Note[]>()
 
   const history = useHistory()
-
-  const search = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      searchNote(query)
-        .then(res => {
-          setNotes(res)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-  }
 
   useEffect(() => {
     searchNote(query)
@@ -33,7 +19,7 @@ const Workspace = () => {
       .catch(err => {
         console.log(err)
       })
-  }, [])
+  }, [query])
 
   return (
     <Layout>
@@ -44,9 +30,8 @@ const Workspace = () => {
           type="text"
           value={query}
           className="block w-full px-4 py-2 mt-5 mb-4 border-2 focus:outline-none rounded-3xl"
-          placeholder="Search for notes. Type and press Enter to search"
+          placeholder="Search for notes"
           onChange={e => setQuery(e.target.value)}
-          onKeyPress={search}
         />
         <ul className="mt-2">
           {notes &&

@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import './App.css'
 import Loader from './components/Loader/Loader'
+import { useAuth } from './context/UserContext'
 
 const NotePage = React.lazy(() => import('./pages/Note'))
 const FolderPage = React.lazy(() => import('./pages/Folder'))
@@ -18,12 +19,15 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER
 axios.defaults.withCredentials = true
 
 function ProtectedRoute({ ...routeProps }: RouteProps) {
-  const authFromStorage = localStorage.getItem('authenticated')
-  const isAuth = authFromStorage ? JSON.parse(authFromStorage) : false
-  if (isAuth) {
-    return <Route {...routeProps} />
+  const { state } = useAuth()
+  if (state.loading) {
+    return <Loader center={true} />
   } else {
-    return <Redirect to="/login" />
+    if (state.authenticated) {
+      return <Route {...routeProps} />
+    } else {
+      return <Redirect to="/login" />
+    }
   }
 }
 function App() {
