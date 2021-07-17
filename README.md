@@ -1,8 +1,8 @@
 # Notely
 
-[View Demo](https://notelyy.vercel.app/)
+## Collaborative note-taking app
 
-A collaborative note-taking app
+[View Demo](https://notelyy.vercel.app/)
 
 - Written in **React** using functional components with Context API for state management
 - Styled with **Tailwind CSS**
