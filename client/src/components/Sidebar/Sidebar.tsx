@@ -57,6 +57,13 @@ const Sidebar = () => {
       {showSidebar ? (
         <div className="box-border w-56 min-h-screen py-4 font-medium break-all transition-all duration-200 ease-in select-none position-fixed bg-basic-100 text-primary-light">
           <div>
+            <Link
+              className="block py-2 text-center cursor-pointer hover:bg-basic-50"
+              to={{ pathname: 'https://github.com/suprajaraman/notely' }}
+              target="_blank"
+            >
+              <i className="mr-2 text-2xl fab fa-github"></i>Github Repo
+            </Link>
             {state.user && (
               <p
                 className="py-2 text-center cursor-pointer hover:bg-basic-50"

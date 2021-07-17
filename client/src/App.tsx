@@ -33,53 +33,37 @@ function ProtectedRoute({ ...routeProps }: RouteProps) {
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <Suspense fallback={<Loader center={true} />}>
+      <Suspense fallback={<Loader center={true} />}>
+        <Switch>
+          <Route exact path="/">
             <Home />
-          </Suspense>
-        </Route>
-        <Route exact path="/login">
-          <Suspense fallback={<Loader center={true} />}>
+          </Route>
+          <Route exact path="/login">
             <Login />
-          </Suspense>
-        </Route>
-        <Route exact path="/register">
-          <Suspense fallback={<Loader center={true} />}>
+          </Route>
+          <Route exact path="/register">
             <Register />
-          </Suspense>
-        </Route>
-        <ProtectedRoute exact path="/workspace">
-          <Suspense fallback={<Loader center={true} />}>
+          </Route>
+          <ProtectedRoute exact path="/workspace">
             <Workspace />
-          </Suspense>
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/folder/:id">
-          <Suspense fallback={<Loader center={true} />}>
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/folder/:id">
             <FolderPage />
-          </Suspense>
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/notes/:id">
-          <Suspense fallback={<Loader center={true} />}>
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/notes/:id">
             <NotePage />
-          </Suspense>
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/favorites">
-          <Suspense fallback={<Loader center={true} />}>
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/favorites">
             <Favorites />
-          </Suspense>
-        </ProtectedRoute>
-        <ProtectedRoute exact path="/shared-with-me">
-          <Suspense fallback={<Loader center={true} />}>
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/shared-with-me">
             <Shared />
-          </Suspense>
-        </ProtectedRoute>
-        <Route exact path="*">
-          <Suspense fallback={<Loader center={true} />}>
+          </ProtectedRoute>
+          <Route exact path="*">
             <NotFound />
-          </Suspense>
-        </Route>
-      </Switch>
+          </Route>
+        </Switch>
+      </Suspense>
     </BrowserRouter>
   )
 }
