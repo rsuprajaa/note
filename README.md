@@ -18,7 +18,7 @@
 Make sure you have Node.js and Postgres installed
 
 ```bash
-git clone git@github.com:suprajaraman/notely.git
+git clone https://github.com/rsuprajaa/notely.git
 cd client
 npm install
 cd server
