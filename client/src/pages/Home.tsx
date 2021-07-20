@@ -1,25 +1,36 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { login } from '../apiCalls/auth'
 import HomeImg from '../assets/home.png'
+import Toast from '../components/Alert/Toast'
+import Loader from '../components/Loader/Loader'
 import Meta from '../components/Meta/MetaData'
 import { useAuth } from '../context/UserContext'
 
 const Home = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
   const { state, dispatch } = useAuth()
   const history = useHistory()
   const guestUserLogin = () => {
     login('jack@example.com', '123456')
       .then(res => {
+        setLoading(true)
         dispatch({ type: 'LOGIN', payload: res.data })
         history.push('/workspace')
+        setError('')
+        setLoading(false)
       })
       .catch(err => {
-        console.log(err)
+        setLoading(false)
+        setError('Something wrong happened')
       })
   }
   return (
     <div className="max-w-full max-h-screen text-center">
       <Meta title="Home | Notely" />
+      {loading && <Loader center={true} />}
+      {error && <Toast message={error} variant="error" />}
       {!state.authenticated && (
         <nav className="h-20">
           <ul className="flex float-right mt-5 text-sm">
