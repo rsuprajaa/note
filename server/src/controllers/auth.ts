@@ -67,7 +67,7 @@ export const logout = async (_: Request, res: Response, next: NextFunction): Pro
       cookie.serialize('token', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
         expires: new Date(0),
         path: '/',
       })
