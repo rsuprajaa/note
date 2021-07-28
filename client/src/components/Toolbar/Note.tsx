@@ -204,6 +204,11 @@ const NoteToolbar = (props: AppProps) => {
             )}
           </>
         )}
+        {!authenticated && (
+          <p className="px-2 py-1 ml-1">
+            Shared by <strong>{author?.user.name}</strong>
+          </p>
+        )}
         <button className="px-2 py-1 ml-1 rounded cursor-pointer hover:bg-basic-50" onClick={favoriteHandler}>
           {favorite ? (
             <span>

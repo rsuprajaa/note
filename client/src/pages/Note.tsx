@@ -95,8 +95,6 @@ const NotePage = () => {
     return () => clearTimeout(timer)
   }, [name, body])
 
-  const editorRef = useRef(null)
-
   const menuRef = useRef(null)
   useOnClickOutside(menuRef, () => setTagsMenu(false))
 
